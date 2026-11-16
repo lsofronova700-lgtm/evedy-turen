@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Эвэды турэн — язык и традиции эвенков Оленька</title>
+<meta name="description" content="Школьный проект: эвенкийский язык, обычаи, песни и словарь-переводчик. Оленёкский район.">
+<style>
+  :root{
+    --night:#13233f;
+    --night2:#1d3560;
+    --snow:#f7f4ee;
+    --paper:#fffdf8;
+    --red:#b8322a;
+    --ochre:#d99a2b;
+    --ink:#1b1b1f;
+    --muted:#5d6470;
+    --line:#e4ddd0;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--snow);line-height:1.55}
+  a{color:var(--red)}
+  /* Орнаментальная полоса (ромбы и треугольники) */
+  .ornament{height:18px;background:
+    linear-gradient(135deg,var(--red) 25%,transparent 25%) -9px 0/18px 18px,
+    linear-gradient(225deg,var(--red) 25%,transparent 25%) -9px 0/18px 18px,
+    linear-gradient(315deg,var(--ochre) 25%,transparent 25%) 0 0/18px 18px,
+    linear-gradient(45deg,var(--ochre) 25%,transparent 25%) 0 0/18px 18px,
+    var(--snow);}
+  header.hero{background:radial-gradient(ellipse at 70% 0%,var(--night2),var(--night) 70%);color:var(--snow);padding:48px 20px 40px;text-align:center;position:relative;overflow:hidden}
+  .hero .stars{position:absolute;inset:0;background-image:
+    radial-gradient(1.5px 1.5px at 10% 20%,#fff,transparent),radial-gradient(1px 1px at 30% 60%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 55% 15%,#fff,transparent),radial-gradient(1px 1px at 80% 40%,#fff,transparent),
+    radial-gradient(1px 1px at 90% 80%,#fff,transparent),radial-gradient(1.5px 1.5px at 20% 85%,#fff,transparent),
+    radial-gradient(1px 1px at 65% 75%,#fff,transparent);opacity:.7;pointer-events:none}
+  .hero h1{font-size:clamp(2.2rem,8vw,3.6rem);margin:.2em 0 .1em;letter-spacing:.02em;position:relative}
+  .hero .sub{font-size:1.1rem;opacity:.9;margin:0 auto;max-width:560px;position:relative}
+  .hero .school{margin-top:14px;font-size:.9rem;opacity:.7;position:relative}
+  .chum{width:90px;height:auto;position:relative;margin-bottom:6px}
+
+  nav{position:sticky;top:0;z-index:10;background:var(--night);display:flex;gap:4px;overflow-x:auto;padding:8px;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{flex:0 0 auto;border:0;background:transparent;color:#cfd8ea;padding:10px 14px;border-radius:999px;font-size:.95rem;cursor:pointer;font-family:inherit}
+  nav button.active{background:var(--snow);color:var(--night);font-weight:600}
+
+  main{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+  section{display:none}
+  section.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.6rem;margin:.2em 0 .6em;color:var(--night)}
+  h2::after{content:"";display:block;width:60px;height:4px;background:var(--red);border-radius:2px;margin-top:6px}
+  .lead{color:var(--muted);margin-top:-6px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .card h3{margin:0 0 6px;color:var(--night);font-size:1.15rem}
+  .card .icon{font-size:1.8rem}
+  .card p{margin:.3em 0 0}
+  .tile{cursor:pointer;transition:transform .15s}
+  .tile:active{transform:scale(.98)}
+
+  .note{background:#fff6e3;border-left:4px solid var(--ochre);padding:12px 14px;border-radius:8px;font-size:.92rem;margin:16px 0}
+
+  /* Переводчик */
+  .tr-box{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  .tr-dir{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:600;color:var(--night)}
+  .swap{border:1px solid var(--line);background:var(--snow);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit}
+  input[type=search]{width:100%;font-size:1.1rem;padding:12px 14px;border:2px solid var(--line);border-radius:10px;font-family:inherit;background:#fff}
+  input[type=search]:focus{outline:none;border-color:var(--night2)}
+  .result{margin-top:14px}
+  .word{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px dashed var(--line)}
+  .word:last-child{border-bottom:0}
+  .word .ev{font-size:1.25rem;font-weight:700;color:var(--red)}
+  .word .ru{color:var(--ink)}
+  .word .cat{font-size:.78rem;color:var(--muted)}
+  .say{border:0;background:var(--night);color:#fff;border-radius:999px;width:40px;height:40px;cursor:pointer;font-size:1rem;flex:0 0 auto}
+  .say[disabled]{opacity:.25;cursor:default}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:.88rem;font-family:inherit}
+  .chip.active{background:var(--red);color:#fff;border-color:var(--red)}
+
+  /* Песни */
+  .song{margin-bottom:14px}
+  .song audio{width:100%;margin:10px 0}
+  .lyrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.95rem}
+  .lyrics div{white-space:pre-line}
+  .lyrics .ev-t{color:var(--red)}
+  @media(max-width:520px){.lyrics{grid-template-columns:1fr}}
+
+  /* Календарь */
+  .season{border-left:6px solid var(--night2)}
+  .season.winter{border-color:#6b8fc7}.season.spring{border-color:#6aa86a}
+  .season.summer{border-color:var(--ochre)}.season.autumn{border-color:var(--red)}
+
+  /* Викторина */
+  .quiz-q{font-size:1.3rem;margin:6px 0 14px}
+  .quiz-q b{color:var(--red)}
+  .opts{display:grid;gap:8px}
+  .opt{text-align:left;padding:14px;border:2px solid var(--line);background:#fff;border-radius:10px;font-size:1.05rem;cursor:pointer;font-family:inherit}
+  .opt.ok{border-color:#3a9a4a;background:#e9f7ec}
+  .opt.bad{border-color:var(--red);background:#fbe9e7}
+  .score{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;margin-bottom:6px}
+  .btn{display:inline-block;border:0;background:var(--red);color:#fff;padding:12px 20px;border-radius:999px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+
+  footer{background:var(--night);color:#b9c4d8;text-align:center;padding:24px 16px;font-size:.88rem}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="stars"></div>
+  <!-- Простой силуэт чума -->
+  <svg class="chum" viewBox="0 0 100 80" aria-hidden="true">
+    <path d="M50 4 L92 76 H8 Z" fill="#f7f4ee"/>
+    <path d="M50 4 L44 0 M50 4 L56 0 M50 4 L47 -2" stroke="#f7f4ee" stroke-width="3"/>
+    <path d="M42 76 L50 52 L58 76 Z" fill="#13233f"/>
+    <path d="M22 60 H78" stroke="#b8322a" stroke-width="4"/>
+    <path d="M30 46 H70" stroke="#d99a2b" stroke-width="3"/>
+  </svg>
+  <h1>Эвэды турэн</h1>
+  <p class="sub">«Эвенкийское слово»: язык, обычаи и песни эвенков Оленька</p>
+  <p class="school">Проект учащихся Оленёкской СОШ им. Х.М. Николаева</p>
+</header>
+<div class="ornament"></div>
+
+<nav id="nav">
+  <button data-s="home" class="active">Главная</button>
+  <button data-s="traditions">Традиции</button>
+  <button data-s="translator">Переводчик</button>
+  <button data-s="songs">Песни</button>
+  <button data-s="calendar">Календарь</button>
+  <button data-s="quiz">Викторина</button>
+  <button data-s="about">О проекте</button>
+</nav>
+
+<main>
+
+<!-- ГЛАВНАЯ -->
+<section id="home" class="active">
+  <h2>Дорова! Здравствуйте!</h2>
+  <p>Эвенки — один из коренных народов Севера и Сибири. Наш сайт создан, чтобы сохранить и передать
+  эвенкийский язык и традиции нашего края: слова, обычаи, песни и рассказы старшего поколения.</p>
+  <div class="grid" style="margin-top:18px">
+    <div class="card tile" data-go="traditions"><div class="icon">🦌</div><h3>Традиции</h3><p>Оленеводство, чум, одежда, обычаи и обряды.</p></div>
+    <div class="card tile" data-go="translator"><div class="icon">💬</div><h3>Переводчик</h3><p>Русско-эвенкийский словарь с произношением.</p></div>
+    <div class="card tile" data-go="songs"><div class="icon">🎵</div><h3>Песни</h3><p>Эвенкийские песни с текстом и переводом.</p></div>
+    <div class="card tile" data-go="calendar"><div class="icon">☀️</div><h3>Календарь</h3><p>Праздники и жизнь по временам года.</p></div>
+    <div class="card tile" data-go="quiz"><div class="icon">❓</div><h3>Викторина</h3><p>Проверь, как хорошо ты знаешь эвенкийские слова.</p></div>
+  </div>
+</section>
+
+<!-- ТРАДИЦИИ -->
+<section id="traditions">
+  <h2>Обычаи и традиции</h2>
+  <p class="lead">Как жили и живут эвенки: уклад, верования, ремёсла.</p>
+  <div class="grid" id="tradGrid"></div>
+  <div class="note">✍️ Добавьте сюда рассказы, которые вы записали у бабушек, дедушек и старожилов Оленька. Это самая ценная часть проекта.</div>
+</section>
+
+<!-- ПЕРЕВОДЧИК -->
+<section id="translator">
+  <h2>Переводчик</h2>
+  <p class="lead">Начните вводить слово, и перевод появится сразу.</p>
+  <div class="tr-box">
+    <div class="tr-dir"><span id="dirFrom">Русский</span> → <span id="dirTo">Эвенкийский</span>
+      <button class="swap" id="swap">⇄ поменять</button></div>
+    <input type="search" id="q" placeholder="Например: олень" autocomplete="off">
+    <div class="chips" id="cats"></div>
+    <div class="result" id="res"></div>
+  </div>
+  <div class="note">Словарь пока черновой. Перед конференцией сверьте слова с учителем эвенкийского языка и запишите произношение (см. «О проекте»).</div>
+</section>
+
+<!-- ПЕСНИ -->
+<section id="songs">
+  <h2>Эвенкийские песни</h2>
+  <p class="lead">Икэн — песня. Слушайте и читайте текст с переводом.</p>
+  <div id="songList"></div>
+</section>
+
+<!-- КАЛЕНДАРЬ -->
+<section id="calendar">
+  <h2>Календарь традиций</h2>
+  <p class="lead">Жизнь эвенка тесно связана с природой и временами года.</p>
+  <div class="grid" id="calGrid"></div>
+</section>
+
+<!-- ВИКТОРИНА -->
+<section id="quiz">
+  <h2>Викторина</h2>
+  <div class="card">
+    <div class="score"><span id="qNum"></span><span id="qScore"></span></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <button class="btn" id="qNext" style="display:none">Дальше →</button>
+  </div>
+</section>
+
+<!-- О ПРОЕКТЕ -->
+<section id="about">
+  <h2>О проекте</h2>
+  <div class="card">
+    <h3>Цель</h3>
+    <p>Сохранить и популяризировать эвенкийский язык и культуру среди школьников через современный, удобный для телефона сайт.</p>
+    <h3 style="margin-top:14px">Чем отличается наш сайт</h3>
+    <ul>
+      <li>Материалы собраны в нашем районе: записи старожилов и местные слова.</li>
+      <li>Словарь-переводчик с живым произношением.</li>
+      <li>Песни с текстом на двух языках.</li>
+      <li>Игровая викторина для изучения слов.</li>
+      <li>Работает на любом телефоне и бесплатно размещён на GitHub Pages.</li>
+    </ul>
+    <h3 style="margin-top:14px">Авторы</h3>
+    <p>Имена учащихся, руководитель проекта, класс (заполните).</p>
+    <h3 style="margin-top:14px">Благодарим</h3>
+    <p>Носителей языка и старожилов, которые поделились знаниями (впишите имена с их согласия).</p>
+  </div>
+</section>
+
+</main>
+
+<div class="ornament"></div>
+<footer>Эвэды турэн © 2026 · Оленёкская СОШ им. Х.М. Николаева</footer>
+
+<script>
+/* =========================================================
+   ДАННЫЕ САЙТА — редактируйте здесь
+   ========================================================= */
+
+/* СЛОВАРЬ.  ev — эвенкийское слово, ru — русское, cat — раздел,
+   audio — имя аудиофайла в папке audio/ (необязательно), например "oron.mp3".
+   ВНИМАНИЕ: черновик, сверьте с учителем эвенкийского языка! */
+const DICT = [
+  {ev:"Дорова!", ru:"здравствуй, привет", cat:"Фразы"},
+  {ev:"аят", ru:"хорошо", cat:"Фразы"},
+  {ev:"ээ", ru:"да", cat:"Фразы"},
+  {ev:"ачин", ru:"нет (не имеется)", cat:"Фразы"},
+
+  {ev:"эни", ru:"мама, мать", cat:"Семья"},
+  {ev:"ами", ru:"папа, отец", cat:"Семья"},
+  {ev:"бэе", ru:"человек, мужчина", cat:"Семья"},
+  {ev:"кунгакан", ru:"ребёнок", cat:"Семья"},
+  {ev:"гирки", ru:"друг, товарищ", cat:"Семья"},
+
+  {ev:"буга", ru:"мир, вселенная, местность", cat:"Природа"},
+  {ev:"дуннэ", ru:"земля, родина", cat:"Природа"},
+  {ev:"дылача", ru:"солнце", cat:"Природа"},
+  {ev:"бега", ru:"луна, месяц", cat:"Природа"},
+  {ev:"осикта", ru:"звезда", cat:"Природа"},
+  {ev:"бира", ru:"река", cat:"Природа"},
+  {ev:"урэ", ru:"гора", cat:"Природа"},
+  {ev:"му", ru:"вода", cat:"Природа"},
+  {ev:"того", ru:"огонь", cat:"Природа"},
+  {ev:"имана", ru:"снег", cat:"Природа"},
+  {ev:"эдын", ru:"ветер", cat:"Природа"},
+  {ev:"мо", ru:"дерево", cat:"Природа"},
+
+  {ev:"орон", ru:"олень (домашний)", cat:"Животные"},
+  {ev:"токи", ru:"лось", cat:"Животные"},
+  {ev:"амакан", ru:"медведь (почтительно: «дедушка»)", cat:"Животные"},
+  {ev:"ниндакан", ru:"собака", cat:"Животные"},
+  {ev:"улуки", ru:"белка", cat:"Животные"},
+  {ev:"олло", ru:"рыба", cat:"Животные"},
+
+  {ev:"дю", ru:"дом, чум", cat:"Быт"},
+  {ev:"колобо", ru:"хлеб", cat:"Быт"},
+  {ev:"икэн", ru:"песня", cat:"Быт"},
+
+  {ev:"умун", ru:"один", cat:"Числа"},
+  {ev:"дюр", ru:"два", cat:"Числа"},
+  {ev:"илан", ru:"три", cat:"Числа"},
+  {ev:"дыгин", ru:"четыре", cat:"Числа"},
+  {ev:"тунга", ru:"пять", cat:"Числа"},
+  {ev:"нюнгун", ru:"шесть", cat:"Числа"},
+  {ev:"надан", ru:"семь", cat:"Числа"},
+  {ev:"дяпкун", ru:"восемь", cat:"Числа"},
+  {ev:"уюн", ru:"девять", cat:"Числа"},
+  {ev:"дян", ru:"десять", cat:"Числа"},
+];
+
+/* ТРАДИЦИИ — дополняйте своими материалами */
+const TRADITIONS = [
+  {icon:"🦌", t:"Оленеводство", d:"Олень — основа жизни эвенка: транспорт, пища, одежда. Оленей берегли и почитали, у каждого было имя."},
+  {icon:"⛺", t:"Чум и кочевье", d:"Эвенки кочевали вслед за оленями. Чум быстро ставили и разбирали: каркас из жердей покрывали шкурами или берестой."},
+  {icon:"🔥", t:"Почитание огня", d:"Огонь — живой хозяин очага. Его «кормили» кусочками пищи, в него нельзя было бросать мусор и тыкать острым."},
+  {icon:"🌲", t:"Уважение к природе", d:"В тайге брали только необходимое. Перед охотой и рыбалкой просили разрешения у духов местности."},
+  {icon:"👘", t:"Одежда и бисер", d:"Одежду шили из оленьих шкур и камуса, украшали бисером, мехом и орнаментом. Каждый узор имел смысл."},
+  {icon:"💃", t:"Круговой танец «Хэйро»", d:"Участники встают в круг, держатся за руки и движутся по солнцу, повторяя за запевалой. Танец объединяет всех."},
+  {icon:"🥁", t:"Шаманизм", d:"Шаман был посредником между людьми и миром духов. Само слово «шаман» пришло в русский язык из эвенкийского."},
+  {icon:"📖", t:"Сказания и нимнгакан", d:"Сказки и героические сказания передавались устно, их исполняли нараспев долгими зимними вечерами."},
+];
+
+/* ПЕСНИ. Положите аудиофайлы в папку songs/ и впишите имя файла.
+   Используйте народные песни или свои записи (с согласия исполнителей). */
+const SONGS = [
+  {title:"Название песни 1", who:"Исполнитель / от кого записана, год",
+   audio:"", // например "songs/pesnya1.mp3"
+   ev:"Строчка на эвенкийском\nВторая строчка\n...",
+   ru:"Перевод первой строчки\nПеревод второй строчки\n..."},
+  {title:"Название песни 2", who:"Исполнитель / от кого записана, год",
+   audio:"", ev:"…", ru:"…"},
+];
+
+/* КАЛЕНДАРЬ */
+const CALENDAR = [
+  {cls:"spring", t:"🌱 Весна", d:"Отёл оленей: самое важное время в году для оленевода. Перекочёвка на весенние пастбища."},
+  {cls:"summer", t:"☀️ Лето", d:"Икэнипкэ — праздник встречи нового жизненного цикла: обряд очищения дымом, кормление огня, круговой танец, состязания. Рыбалка, сбор ягод."},
+  {cls:"autumn", t:"🍂 Осень", d:"Начало охотничьего сезона, заготовка мяса и рыбы, подготовка одежды к зиме. 9 августа — Международный день коренных народов мира."},
+  {cls:"winter", t:"❄️ Зима", d:"Пушной промысел, кочевье по зимним пастбищам. Долгие вечера: сказки, рукоделие, бисер."},
+];
+
+/* =========================================================
+   ЛОГИКА (менять не обязательно)
+   ========================================================= */
+const $ = s => document.querySelector(s);
+
+// Навигация
+function show(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("active", s.id===id));
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active", b.dataset.s===id));
+  window.scrollTo({top: document.querySelector("nav").offsetTop, behavior:"smooth"});
+  if(id==="quiz" && !quizStarted) startQuiz();
+  history.replaceState(null,"","#"+id);
+}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>show(b.dataset.s));
+document.querySelectorAll("[data-go]").forEach(c=>c.onclick=()=>show(c.dataset.go));
+
+// Традиции
+$("#tradGrid").innerHTML = TRADITIONS.map(x=>
+  `<div class="card"><div class="icon">${x.icon}</div><h3>${x.t}</h3><p>${x.d}</p></div>`).join("");
+
+// Календарь
+$("#calGrid").innerHTML = CALENDAR.map(x=>
+  `<div class="card season ${x.cls}"><h3>${x.t}</h3><p>${x.d}</p></div>`).join("");
+
+// Песни
+$("#songList").innerHTML = SONGS.map(s=>`
+  <div class="card song">
+    <h3>🎵 ${s.title}</h3>
+    <div style="color:var(--muted);font-size:.9rem">${s.who}</div>
+    ${s.audio ? `<audio controls preload="none" src="${s.audio}"></audio>` : `<p class="note" style="margin:10px 0">Аудиозапись будет добавлена</p>`}
+    <div class="lyrics">
+      <div><b>Эвэды</b><br><span class="ev-t">${s.ev}</span></div>
+      <div><b>По-русски</b><br>${s.ru}</div>
+    </div>
+  </div>`).join("");
+
+// Переводчик
+let ruToEv = true, curCat = "Все";
+const cats = ["Все", ...new Set(DICT.map(w=>w.cat))];
+$("#cats").innerHTML = cats.map(c=>`<button class="chip${c==="Все"?" active":""}" data-c="${c}">${c}</button>`).join("");
+$("#cats").onclick = e=>{
+  if(!e.target.dataset.c) return;
+  curCat = e.target.dataset.c;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active", c.dataset.c===curCat));
+  render();
+};
+$("#swap").onclick = ()=>{
+  ruToEv = !ruToEv;
+  $("#dirFrom").textContent = ruToEv ? "Русский" : "Эвенкийский";
+  $("#dirTo").textContent   = ruToEv ? "Эвенкийский" : "Русский";
+  $("#q").placeholder = ruToEv ? "Например: олень" : "Например: орон";
+  render();
+};
+$("#q").oninput = render;
+const norm = s => s.toLowerCase().replace(/ё/g,"е").replace(/[!?.,]/g,"").trim();
+
+function render(){
+  const q = norm($("#q").value);
+  let list = DICT.filter(w => curCat==="Все" || w.cat===curCat);
+  if(q) list = list.filter(w => norm(ruToEv ? w.ru : w.ev).includes(q));
+  if(!list.length){ $("#res").innerHTML = `<p style="color:var(--muted)">Такого слова пока нет в словаре.</p>`; return; }
+  $("#res").innerHTML = list.map((w,i)=>`
+    <div class="word">
+      <div>
+        <div class="${ruToEv?'ev':'ru'}">${ruToEv ? w.ev : w.ru}</div>
+        <div class="${ruToEv?'ru':'ev'}" style="font-size:.95rem">${ruToEv ? w.ru : w.ev}</div>
+        <div class="cat">${w.cat}</div>
+      </div>
+      <button class="say" ${w.audio?"":"disabled"} title="${w.audio?'Послушать':'Аудио пока нет'}" data-a="${w.audio||""}">🔊</button>
+    </div>`).join("");
+}
+$("#res").onclick = e=>{
+  const a = e.target.dataset && e.target.dataset.a;
+  if(a) new Audio("audio/"+a).play().catch(()=>{});
+};
+render();
+
+// Викторина
+let quizStarted=false, qi=0, score=0, qs=[];
+const TOTAL = 10;
+function shuffle(a){ return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]); }
+function startQuiz(){
+  quizStarted=true; qi=0; score=0;
+  qs = shuffle(DICT).slice(0, Math.min(TOTAL, DICT.length));
+  ask();
+}
+function ask(){
+  $("#qNext").style.display="none";
+  if(qi>=qs.length){
+    $("#qNum").textContent=""; $("#qScore").textContent="";
+    const msg = score>=qs.length*0.8 ? "Аят! Отлично! 🦌" : score>=qs.length*0.5 ? "Хорошо! Можно ещё лучше." : "Попробуй ещё раз!";
+    $("#qText").innerHTML = `Результат: <b>${score} из ${qs.length}</b><br>${msg}`;
+    $("#qOpts").innerHTML = `<button class="btn" onclick="startQuiz()">Играть снова</button>`;
+    return;
+  }
+  const w = qs[qi], evToRu = Math.random()<0.5;
+  const wrong = shuffle(DICT.filter(x=>x!==w)).slice(0,3);
+  const opts = shuffle([w,...wrong]);
+  $("#qNum").textContent = `Вопрос ${qi+1} из ${qs.length}`;
+  $("#qScore").textContent = `Очки: ${score}`;
+  $("#qText").innerHTML = evToRu ? `Что значит <b>${w.ev}</b>?` : `Как по-эвенкийски «<b>${w.ru}</b>»?`;
+  $("#qOpts").innerHTML = opts.map(o=>`<button class="opt" data-ok="${o===w}">${evToRu?o.ru:o.ev}</button>`).join("");
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const ok = b.dataset.ok==="true";
+    if(ok) score++;
+    document.querySelectorAll(".opt").forEach(x=>{ x.disabled=true; if(x.dataset.ok==="true") x.classList.add("ok"); });
+    if(!ok) b.classList.add("bad");
+    $("#qScore").textContent = `Очки: ${score}`;
+    qi++; $("#qNext").style.display="inline-block";
+  });
+}
+$("#qNext").onclick = ask;
+
+// Открыть раздел по ссылке (#translator и т.д.)
+const h = location.hash.slice(1);
+if(h && document.getElementById(h)) show(h);
+</script>
+</body>
+</html>
